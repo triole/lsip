@@ -1,0 +1,16 @@
+ip_retrieval = [
+  "http://api.ipify.org",
+  "http://jsonip.com",
+  "http://wtfismyip.com/json",
+  "http://ipecho.net/plain",
+  "http://ident.me",
+  "http://icanhazip.com",
+  "http://myip.dnsomatic.com",
+  "http://bot.whatismyipaddress.com",
+  "http://api.ipify.org?format=text",
+]
+
+tor_check = "https://check.torproject.org/?lang=en_EN"
+more = "http://ip-api.com/line"
+
+ua = "Mozilla/5.0 (X11; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0"

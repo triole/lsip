@@ -8,29 +8,37 @@ func process() {
 	chin := make(chan tReq, CLI.Threads)
 	chout := make(chan tReq, CLI.Threads)
 
-	for _, el := range conf.IPRetrieval {
-		go makeReq(el, chin, chout)
+	for _, url := range conf.IPRetrieval {
+		if CLI.DryRun {
+			lg.Info(
+				"dry run, would have made a request",
+				logseal.F{"url": url})
+		} else {
+			go makeReq(url, chin, chout)
+		}
 	}
 
-	c := 0
-	ln := len(conf.IPRetrieval)
-	for req := range chout {
-		c++
-		if CLI.All {
-			printLog("got response", req, len(chin))
-		} else {
-			// default mode to print first fetched ip
-			if req.Error == nil && (isValidIPv4(req.IPv4) || isValidIPv6(req.IPv6)) {
+	if !CLI.DryRun {
+		c := 0
+		ln := len(conf.IPRetrieval)
+		for req := range chout {
+			c++
+			if CLI.All {
 				printLog("got response", req, len(chin))
+			} else {
+				// default mode to print first fetched ip
+				if req.Error == nil && (isValidIPv4(req.IPv4) || isValidIPv6(req.IPv6)) {
+					printLog("got response", req, len(chin))
+					close(chin)
+					close(chout)
+					break
+				}
+			}
+			if c >= ln {
 				close(chin)
 				close(chout)
 				break
 			}
-		}
-		if c >= ln {
-			close(chin)
-			close(chout)
-			break
 		}
 	}
 }

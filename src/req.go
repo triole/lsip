@@ -33,7 +33,6 @@ func req(req tReq) (resp tReq) {
 	var data []byte
 	url, err := url.Parse(req.URL)
 	if err != nil {
-		// lg.IfErrError("can not parse url", logseal.F{"error": err})
 		resp.Error = err
 		return
 	}
@@ -42,23 +41,20 @@ func req(req tReq) (resp tReq) {
 
 	request, err := http.NewRequest("GET", url.String(), nil)
 	if err != nil {
-		// lg.Error("can not init request", logseal.F{"error": err})
 		resp.Error = err
 		return
 	}
 	request.Header.Set("User-Agent", conf.UA)
 
-	// lg.Debug("make request", logseal.F{"url": req.URL})
+	lg.Debug("make request", logseal.F{"url": req.URL})
 	response, err := client.Do(request)
 	if err != nil {
-		// lg.Error("request failed", logseal.F{"error": err})
 		resp.Error = err
 		return
 	}
 
 	if err == nil {
 		data, err = io.ReadAll(response.Body)
-		lg.IfErrError("unable to read request response", logseal.F{"error": err})
 		if err != nil {
 			resp.Error = err
 			return

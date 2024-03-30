@@ -4,6 +4,12 @@ import (
 	"github.com/triole/logseal"
 )
 
+type tDone struct {
+	IPv4 bool
+	IPv6 bool
+	Done bool
+}
+
 func process() {
 	chin := make(chan tReq, CLI.Threads)
 	chout := make(chan tReq, CLI.Threads)
@@ -21,14 +27,47 @@ func process() {
 	if !CLI.DryRun {
 		c := 0
 		ln := len(conf.IPRetrieval)
+		done := tDone{IPv4: false, IPv6: false, Done: false}
 		for req := range chout {
 			c++
-			if CLI.All {
-				printLog("got response", req, len(chin))
-			} else {
-				// default mode to print first fetched ip
-				if req.Error == nil && (isValidIPv4(req.IPv4) || isValidIPv6(req.IPv6)) {
-					printLog("got response", req, len(chin))
+			// default mode, print first fetched ip matching the grep flag
+			if req.Error == nil {
+				if CLI.Print == "4" && isValidIPv4((req.IPv4)) {
+					printLog("successful ipv4 fetch", req, len(chin))
+					done.IPv4 = true
+					done.Done = true
+				}
+
+				if CLI.Print == "6" && isValidIPv6((req.IPv6)) {
+					printLog("successful ipv6 fetch", req, len(chin))
+					done.IPv6 = true
+					done.Done = true
+				}
+
+				if CLI.Print == "both" && (isValidIPv4(req.IPv4) || isValidIPv6(req.IPv6)) {
+					if isValidIPv4(req.IPv4) && !done.IPv4 {
+						printLog("successful ipv4 fetch, both ip versions", req, len(chin))
+						done.IPv4 = true
+					}
+					if isValidIPv6(req.IPv6) && !done.IPv6 {
+						printLog("successful ipv6 fetch, both ip versions", req, len(chin))
+						done.IPv6 = true
+					}
+					if done.IPv4 && done.IPv6 {
+						done.Done = true
+					}
+				}
+
+				if CLI.Print == "any" && (isValidIPv4(req.IPv4) || isValidIPv6(req.IPv6)) {
+					printLog("successful fetch, any ip version", req, len(chin))
+					done.Done = true
+				}
+
+				if CLI.Print == "all" && (isValidIPv4(req.IPv4) || isValidIPv6(req.IPv6)) {
+					printLog("successful fetch, any ip version", req, len(chin))
+				}
+
+				if done.Done {
 					close(chin)
 					close(chout)
 					break

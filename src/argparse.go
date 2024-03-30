@@ -20,8 +20,8 @@ var (
 )
 
 var CLI struct {
+	Print       string `help:"print certain ip version, can be: 4, 6, both, any or all" short:"p" enum:"4,6,both,any,all" default:"any"`
 	Threads     int    `help:"threads, max of parallel requests" short:"t" default:"16"`
-	All         bool   `help:"print all fetched responses" short:"a"`
 	DryRun      bool   `help:"dry run, just print don't do" short:"n"`
 	LogFile     string `help:"log file" default:"/dev/stdout"`
 	LogLevel    string `help:"log level" default:"info" enum:"trace,debug,info,error"`

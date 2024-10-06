@@ -53,16 +53,14 @@ func req(req tReq) (resp tReq) {
 		return
 	}
 
-	if err == nil {
-		data, err = io.ReadAll(response.Body)
-		if err != nil {
-			resp.Error = err
-			return
-		}
-		resp.Body = string(data)
-		resp.IPv4 = rxFindIPv4(resp.Body)
-		resp.IPv6 = rxFindIPv6(resp.Body)
+	data, err = io.ReadAll(response.Body)
+	if err != nil {
+		resp.Error = err
+		return
 	}
+	resp.Body = string(data)
+	resp.IPv4 = rxFindIPv4(resp.Body)
+	resp.IPv6 = rxFindIPv6(resp.Body)
 	resp.Duration = time.Since(start)
 	return
 }

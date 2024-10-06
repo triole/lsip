@@ -13,4 +13,4 @@ ip_retrieval = [
 tor_check = "https://check.torproject.org/?lang=en_EN"
 more = "http://ip-api.com/line"
 
-ua = "Mozilla/5.0 (X11; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0"
+ua = "Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0"

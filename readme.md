@@ -9,7 +9,7 @@
 
 ## Synopsis
 
-Quickly get and print your external IPv4 or IPv6 Address.
+Quickly get and print your external IPv4 or IPv6 address.
 
 ## Help
 
